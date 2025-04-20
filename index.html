@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>黄河流域山东段洪水风险图</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.js"></script>
+    <link href="https://api.tiles.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.css" rel="stylesheet" />
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+
+        h2,
+        h3 {
+            margin: 10px;
+            font-size: 18px;
+            color: #333;
+        }
+
+        h3 {
+            font-size: 16px;
+        }
+
+        p {
+            margin: 10px;
+            color: #666;
+        }
+
+        .map-overlay {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.6); /* 设置背景透明度为 60% */
+            font-family: 'Roboto', sans-serif;
+            overflow: auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px); /* 添加模糊效果 */
+        }
+
+        .map-overlay:hover {
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            transform: scale(1.02); /* 鼠标悬停时放大 */
+        }
+
+        #map {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+        }
+
+        #features {
+            top: 20px;
+            right: 20px;
+            height: auto;
+            width: auto;
+            padding: 10px;
+        }
+
+        #legend {
+            bottom: 20px;
+            right: 20px;
+            padding: 15px;
+            line-height: 22px;
+            height: auto;
+            width: 200px;
+        }
+
+        .legend-key {
+            display: inline-block;
+            border-radius: 20%;
+            width: 12px;
+            height: 12px;
+            margin-right: 8px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="map"></div>
+    <div class="map-overlay" id="features">
+        <h2>Risk Map of 50-yr Recurrence Interval Flood</h2>
+        <div id="pd"><p>Shandong Section of Yellow River Basin</p></div>
+    </div>
+    <div class="map-overlay" id="legend"></div>
+
+    <script>
+        // define access token
+        mapboxgl.accessToken = 'pk.eyJ1IjoiZ2VuaXVzbXpnIiwiYSI6ImNsdDd4cTU3ajByMW8ycW1nOThoN3pqZGkifQ.cRiU8z60Ccpq8DsHqfZQfg';
+
+        // create map
+        const map = new mapboxgl.Map({
+            container: 'map', // container id
+            style: 'mapbox://styles/geniusmzg/cm9p9gdyd009o01qs8pxu5e2w' // map style URL from Mapbox Studio
+        });
+
+        // wait for map to load before adjusting it
+        map.on('load', () => {
+            // make a pointer cursor
+            map.getCanvas().style.cursor = 'default';
+
+            // set map bounds to the continental US
+            map.fitBounds([
+                [116, 34.9],
+                [120, 38.1]
+            ]);
+
+            // define layer names
+            const layers = [
+                'Low Risk',
+                'Moderate Low Risk',
+                'Moderate Risk',
+                'Moderate High Risk',
+                'High Risk'
+            ];
+            const colors = [
+                '#05c756',
+                '#24f604',
+                '#fae11e',
+                '#fd990d',
+                '#f40606'
+            ];
+
+            // create legend
+            const legend = document.getElementById('legend');
+
+            layers.forEach((layer, i) => {
+                const color = colors[i];
+                const item = document.createElement('div');
+                const key = document.createElement('span');
+                key.className = 'legend-key';
+                key.style.backgroundColor = color;
+
+                const value = document.createElement('span');
+                value.innerHTML = `${layer}`;
+                item.appendChild(key);
+                item.appendChild(value);
+                legend.appendChild(item);
+            });
+        });
+    </script>
+</body>
+
+</html>    
